@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <stringProp name="TestPlan.comments"></stringProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+        <collectionProp name="HeaderManager.headers"/>
+      </HeaderManager>
+      <hashTree/>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">mims.rewaatech.com</stringProp>
+        <stringProp name="HTTPSampler.port"></stringProp>
+        <stringProp name="HTTPSampler.protocol">https</stringProp>
+        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+        <stringProp name="HTTPSampler.path"></stringProp>
+        <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="randomPhoneNumber" elementType="Argument">
+            <stringProp name="Argument.name">randomPhoneNumber</stringProp>
+            <stringProp name="Argument.value">${__Random(100000000,999999999,randomPhoneNumber)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.util.Base64
+import java.security.MessageDigest
+
+// Generate a random code verifier
+def codeVerifier = UUID.randomUUID().toString().replaceAll(&quot;-&quot;, &quot;&quot;) + UUID.randomUUID().toString().replaceAll(&quot;-&quot;, &quot;&quot;)
+
+// Hash the code verifier to generate the code challenge
+MessageDigest sha256Digest = MessageDigest.getInstance(&quot;SHA-256&quot;)
+def codeChallengeBytes = sha256Digest.digest(codeVerifier.bytes)
+def codeChallenge = Base64.encoder.encodeToString(codeChallengeBytes).replace(&quot;=&quot;, &quot;&quot;).replace(&quot;+&quot;, &quot;-&quot;).replace(&quot;/&quot;, &quot;_&quot;)
+
+// Store the values in JMeter variables
+vars.put(&quot;codeVerifier&quot;, codeVerifier)
+vars.put(&quot;codeChallenge&quot;, codeChallenge)
+</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig guiclass="com.googlecode.jmeter.plugins.webdriver.config.gui.ChromeDriverConfigGui" testclass="com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig" testname="jp@gc - Chrome Driver Config" enabled="true">
+          <boolProp name="WebDriverConfig.acceptinsecurecerts">false</boolProp>
+          <boolProp name="WebDriverConfig.reset_per_iteration">false</boolProp>
+          <stringProp name="WebDriverConfig.driver_path">C:\Users\syedz\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe</stringProp>
+          <boolProp name="WebDriverConfig.dev_mode">false</boolProp>
+          <boolProp name="WebDriverConfig.headless">false</boolProp>
+          <boolProp name="WebDriverConfig.maximize_browser">true</boolProp>
+          <stringProp name="ChromeDriverConfig.additional_args"></stringProp>
+          <stringProp name="ChromeDriverConfig.binary_path"></stringProp>
+          <stringProp name="WebDriverConfig.proxy_type">SYSTEM</stringProp>
+          <stringProp name="WebDriverConfig.proxy_pac_url"></stringProp>
+          <stringProp name="WebDriverConfig.http_host"></stringProp>
+          <intProp name="WebDriverConfig.http_port">8080</intProp>
+          <boolProp name="WebDriverConfig.use_http_for_all_protocols">true</boolProp>
+          <stringProp name="WebDriverConfig.https_host"></stringProp>
+          <intProp name="WebDriverConfig.https_port">8080</intProp>
+          <boolProp name="WebDriverConfig.use_ftp_proxy">true</boolProp>
+          <stringProp name="WebDriverConfig.ftp_host"></stringProp>
+          <intProp name="WebDriverConfig.ftp_port">8080</intProp>
+          <boolProp name="WebDriverConfig.use_socks_proxy">true</boolProp>
+          <stringProp name="WebDriverConfig.socks_host"></stringProp>
+          <intProp name="WebDriverConfig.socks_port">8080</intProp>
+          <stringProp name="WebDriverConfig.no_proxy">localhost</stringProp>
+          <stringProp name="WebDriverConfig.custom_capabilites"></stringProp>
+        </com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig>
+        <hashTree/>
+        <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="jp@gc - WebDriver Sampler" enabled="true">
+          <stringProp name="WebDriverSampler.script">import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.net.URL;
+import javax.swing.JOptionPane;
+import java.time.Duration;
+
+
+WDS.sampleResult.sampleStart();
+try {
+    // Define and open the initial URL
+    String initialUrl = &quot;https://oauth-playdgound-nexusge-frontend-web-e0a170a22b956c8a7ff4d5ff6.gitlab.io&quot;;
+    WDS.browser.get(initialUrl);
+    WDS.log.info(&quot;Initial URL opened: &quot; + initialUrl);
+
+    WebDriverWait wait = new WebDriverWait(WDS.browser, Duration.ofSeconds(5));
+    WebElement accordionButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(&quot;button.accordion-button.collapsed&quot;)));
+
+ // Click the button
+    accordionButton.click();
+    WDS.log.info(&quot;Accordion button clicked successfully.&quot;);
+
+    // Wait briefly to ensure the new URL is loaded
+    Thread.sleep(3000); // Adjust time if needed for navigation to complete
+
+    WebDriverWait wait = new WebDriverWait(WDS.browser, Duration.ofSeconds(10));
+    Robot robot = new Robot();
+
+    // Helper method to paste text in a field
+    void pasteTextInField(String text, By locator) throws Exception {
+        // Copy the text to the clipboard
+        StringSelection selection = new StringSelection(text);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+        
+        // Focus on the input field and paste text
+        WebElement inputField = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        inputField.click();
+        robot.delay(500); // Small delay to ensure field is ready
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+    }
+Thread.sleep(2000);
+    // Paste &quot;superapp-webview-mobile-app-01&quot; in clientId field
+    pasteTextInField(&quot;superapp-webview-mobile-app-01&quot;, By.id(&quot;clientId&quot;));
+    WDS.log.info(&quot;Text &apos;superapp-webview-mobile-app-01&apos; pasted in clientId field.&quot;);
+Thread.sleep(2000);
+    // Paste &quot;https://kc.staging.silktech.ge/realms/super-app/protocol/openid-connect/registrations&quot; in authUri field
+    pasteTextInField(&quot;https://kc.staging.silktech.ge/realms/super-app/protocol/openid-connect/registrations&quot;, By.id(&quot;authUri&quot;));
+    WDS.log.info(&quot;Text &apos;https://kc.staging.silktech.ge/realms/super-app/protocol/openid-connect/registrations&apos; pasted in authUri field.&quot;);
+    
+Thread.sleep(2000);
+
+    // Paste &quot;&lt;input class=&quot;form-control&quot; id=&quot;authUri&quot; name=&quot;authUri&quot; required=&quot;&quot;&gt;&quot; in tokenUri field
+    pasteTextInField(&quot;https://kc.staging.silktech.ge/realms/super-app/protocol/openid-connect/token&quot;, By.id(&quot;tokenUri&quot;));
+    WDS.log.info(&quot;Text &apos;https://kc.staging.silktech.ge/realms/super-app/protocol/openid-connect/token&apos; pasted in tokenUri field.&quot;);
+    
+    Thread.sleep(2000);
+
+//    Paste &quot;openid&quot; in scope field
+  pasteTextInField(&quot;openid&quot;, By.id(&quot;scope&quot;));
+   WDS.log.info(&quot;Text &apos;openid&apos; pasted in scope field.&quot;);
+
+   WebElement s256Label = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(&quot;label[for=&apos;pkceModeS256&apos;]&quot;)));
+    s256Label.click();
+    WDS.log.info(&quot;Label for S256 radio button clicked successfully.&quot;);
+        Thread.sleep(2000);
+
+     WebElement saveConfigButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(&quot;button.btn.btn-primary[type=&apos;submit&apos;]&quot;)));
+    saveConfigButton.click();
+    WDS.log.info(&quot;Save Configuration button clicked successfully.&quot;);
+    Thread.sleep(2000);
+
+    
+        // Wait for the &quot;Authorize&quot; button to be clickable
+    WebDriverWait wait = new WebDriverWait(WDS.browser, Duration.ofSeconds(10));
+    WebElement authorizeButton = wait.until(ExpectedConditions.elementToBeClickable(By.id(&quot;authorize&quot;)));
+    WebElement authorizeButton = WDS.browser.findElement(By.xpath(&quot;//button[@id=&apos;authorize&apos;]&quot;));
+
+    // Click the &quot;Authorize&quot; button
+    authorizeButton.click();
+    WDS.log.info(&quot;Authorize button clicked.&quot;);
+
+Thread.sleep(3000);
+    // Use ${randomPhoneNumber} directly, JMeter will replace it with the value from User Defined Variables
+    String randomPhoneNumber = &quot;${randomPhoneNumber}&quot;;
+    WDS.log.info(&quot;Using random phone number: &quot; + randomPhoneNumber);
+
+    // Locate and click on the phone number field
+    WebElement phoneNumberField = WDS.browser.findElement(By.xpath(&quot;//input[@name=&apos;fldFrmTel&apos;]&quot;));
+    // Update this XPath if needed
+    phoneNumberField.click();
+    Thread.sleep(2000); // Adjust time as needed for page loading
+    // Enter the random phone number into the field using CharSequence array
+    phoneNumberField.sendKeys(new CharSequence[] { randomPhoneNumber });
+
+    WebElement Submitbutton = WDS.browser.findElement(By.xpath(&quot;//input[@type=&apos;submit&apos;] &quot;));
+    Submitbutton.click();
+
+    WebElement checkbox1 = WDS.browser.findElement(By.xpath(&quot;(//input[@type=&apos;checkbox&apos;])[1]&quot;));
+    checkbox1.click();
+
+    WebElement checkbox2 = WDS.browser.findElement(By.xpath(&quot;(//input[@type=&apos;checkbox&apos;])[2]&quot;));
+    checkbox2.click();
+
+    WebElement checkbox3 = WDS.browser.findElement(By.xpath(&quot;(//input[@type=&apos;checkbox&apos;])[3]&quot;));
+    checkbox3.click();
+
+    WebElement Submitbutton = WDS.browser.findElement(By.xpath(&quot;//input[@name=&apos;accept&apos;] &quot;));
+    Submitbutton.click();
+  
+//    WebElement OTPcode = WDS.browser.findElement(By.xpath(&quot;//input[@type=&apos;text&apos; and @id=&apos;OTPCodeInput--fake&apos;]&quot;));
+//    WebElement OTPcode = WDS.browser.findElement(By.xpath(&quot;//input[@type=&apos;text&apos;]/following-sibling::input[@id=&apos;OTPCodeInput&apos;]&quot;));
+
+//WebElement OTPcode = WDS.browser.findElement(By.xpath(&quot;//input[@id=&apos;OTPCodeInput--fake&apos;]&quot;));
+
+  String otpCode = &quot;2222&quot;;
+    StringSelection stringSelection = new StringSelection(otpCode);
+    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+
+   
+
+    // Wait for the OTP input field to be clickable
+    WebDriverWait wait = new WebDriverWait(WDS.browser, Duration.ofSeconds(10));
+    WebElement OTPcodeFake = wait.until(ExpectedConditions.elementToBeClickable(By.id(&quot;OTPCodeInput--fake&quot;)));
+
+    // Click to focus on the OTP input field
+    OTPcodeFake.click();
+
+    // Use Robot class to simulate &quot;CTRL+V&quot; paste
+    Robot robot = new Robot();
+    robot.delay(500); // Wait briefly to ensure the element is ready
+    robot.keyPress(KeyEvent.VK_CONTROL);
+    robot.keyPress(KeyEvent.VK_V);
+    robot.keyRelease(KeyEvent.VK_V);
+    robot.keyRelease(KeyEvent.VK_CONTROL);
+
+    WDS.log.info(&quot;OTP code pasted using clipboard.&quot;);
+    
+WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(&quot;button[type=&apos;submit&apos;]&quot;)));
+    submitButton.click();
+    WDS.log.info(&quot;Submit button clicked.&quot;);
+
+    String password = &quot;Password1.&quot;;
+    StringSelection stringSelection = new StringSelection(password);
+    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+
+    // Locate the password field and click to focus on it
+    WebElement EnterPassword = WDS.browser.findElement(By.xpath(&quot;//input[@id=&apos;frmFldPassword&apos;]&quot;));
+    EnterPassword.click();
+    Thread.sleep(2000); // Wait for the field to be fully interactable
+
+    // Use Robot class to simulate &quot;CTRL+V&quot; for pasting the password
+    Robot robot = new Robot();
+    robot.delay(500); // Small delay for reliability
+    robot.keyPress(KeyEvent.VK_CONTROL);
+    robot.keyPress(KeyEvent.VK_V);
+    robot.keyRelease(KeyEvent.VK_V);
+    robot.keyRelease(KeyEvent.VK_CONTROL);
+
+    WDS.log.info(&quot;Password pasted using clipboard.&quot;);
+
+    WebElement confirmPassword = WDS.browser.findElement(By.xpath(&quot;//input[@id=&apos;frmFldPasswordConfirm&apos;]&quot;));
+    confirmPassword.click();
+    Thread.sleep(1000); // Wait for the field to be fully interactable
+
+    // Paste the password again in the confirmation field
+    robot.keyPress(KeyEvent.VK_CONTROL);
+    robot.keyPress(KeyEvent.VK_V);
+    robot.keyRelease(KeyEvent.VK_V);
+    robot.keyRelease(KeyEvent.VK_CONTROL);
+    WDS.log.info(&quot;Password pasted using clipboard for the confirmation field.&quot;);
+    WebElement Submitbutton = WDS.browser.findElement(By.xpath(&quot;//input[@type=&apos;submit&apos;] &quot;));
+    Submitbutton.click();
+
+//AUTH
+WebElement authCodeInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(&quot;authCode&quot;)));
+
+    // Clear clipboard before copying
+    StringSelection clearSelection = new StringSelection(&quot;&quot;);
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    clipboard.setContents(clearSelection, null);
+
+    // Small delay to ensure the field is populated with text
+    Thread.sleep(5000);
+
+    // Click and use Robot class to simulate &quot;CTRL+A&quot; to select and &quot;CTRL+C&quot; to copy the text
+    authCodeInput.click();
+    Robot robot = new Robot();
+    robot.delay(500);
+    robot.keyPress(KeyEvent.VK_CONTROL);
+    robot.keyPress(KeyEvent.VK_A);
+    robot.keyRelease(KeyEvent.VK_A);
+    robot.keyRelease(KeyEvent.VK_CONTROL);
+
+    robot.delay(500);
+    robot.keyPress(KeyEvent.VK_CONTROL);
+    robot.keyPress(KeyEvent.VK_C);
+    robot.keyRelease(KeyEvent.VK_C);
+    robot.keyRelease(KeyEvent.VK_CONTROL);
+
+    // Delay to ensure clipboard content is ready
+    Thread.sleep(500); 
+
+    // Retrieve text from clipboard
+    String authCode = (String) clipboard.getData(DataFlavor.stringFlavor);
+    
+    // Log the authCode to verify it was retrieved correctly
+    if (authCode == null || authCode.isEmpty()) {
+        WDS.log.error(&quot;Authorization code not found in clipboard. Please check if it was copied correctly.&quot;);
+    } else {
+        WDS.log.info(&quot;Authorization code retrieved from clipboard: &quot; + authCode);
+        
+        // Store in JMeter variable for use in subsequent requests
+        org.apache.jmeter.threads.JMeterContextService.getContext().getVariables().put(&quot;auth_Code&quot;, authCode);
+        WDS.log.info(&quot;Authorization code saved to JMeter variable: auth_Code = &quot; + authCode);
+    }
+
+    WebElement button = WDS.browser.findElement(By.cssSelector(&quot;button#getAccessToken&quot;));
+button.click();
+
+// THREE TOKENS
+    // Wait for the page to load
+    Thread.sleep(3000); // Adjust the time as needed for page loading
+
+    // Click the &quot;accessTokenCopyToClipboard&quot; button and retrieve the token
+    WebElement accessTokenButton = WDS.browser.findElement(By.id(&quot;accessTokenCopyToClipboard&quot;));
+    accessTokenButton.click();
+    WDS.log.info(&quot;Clicked on accessTokenCopyToClipboard button.&quot;);
+    
+    // Wait for the copy action to complete
+    Thread.sleep(5000);  // Adjust the sleep time as needed for copy action to complete
+
+    // Retrieve the access token from the clipboard
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    String accessToken = (String) clipboard.getData(DataFlavor.stringFlavor);
+    
+    // Log the access token to verify it was copied correctly
+    if (accessToken == null || accessToken.isEmpty()) {
+        WDS.log.error(&quot;Access token not found in clipboard.&quot;);
+    } else {
+        WDS.log.info(&quot;Access token retrieved from clipboard: &quot; + accessToken);
+        
+        // Store in JMeter variable for use in subsequent requests
+        org.apache.jmeter.threads.JMeterContextService.getContext().getVariables().put(&quot;accessToken&quot;, accessToken);
+        WDS.log.info(&quot;Access token saved to JMeter variable: accessToken = &quot; + accessToken);
+    }
+
+    // Repeat the same steps for refreshTokenCopyToClipboard button
+    WebElement refreshTokenButton = WDS.browser.findElement(By.id(&quot;refreshTokenCopyToClipboard&quot;));
+    refreshTokenButton.click();
+    WDS.log.info(&quot;Clicked on refreshTokenCopyToClipboard button.&quot;);
+    Thread.sleep(5000);  // Adjust time as needed
+
+    // Retrieve the refresh token from the clipboard
+    String refreshToken = (String) clipboard.getData(DataFlavor.stringFlavor);
+    
+    if (refreshToken == null || refreshToken.isEmpty()) {
+        WDS.log.error(&quot;Refresh token not found in clipboard.&quot;);
+    } else {
+        WDS.log.info(&quot;Refresh token retrieved from clipboard: &quot; + refreshToken);
+        org.apache.jmeter.threads.JMeterContextService.getContext().getVariables().put(&quot;refreshToken&quot;, refreshToken);
+        WDS.log.info(&quot;Refresh token saved to JMeter variable: refreshToken = &quot; + refreshToken);
+    }
+
+    // Repeat the same steps for idTokenCopyToClipboard button
+    WebElement idTokenButton = WDS.browser.findElement(By.id(&quot;idTokenCopyToClipboard&quot;));
+    idTokenButton.click();
+    WDS.log.info(&quot;Clicked on idTokenCopyToClipboard button.&quot;);
+    Thread.sleep(5000);  // Adjust time as needed
+
+    // Retrieve the ID token from the clipboard
+    String idToken = (String) clipboard.getData(DataFlavor.stringFlavor);
+    
+    if (idToken == null || idToken.isEmpty()) {
+        WDS.log.error(&quot;ID token not found in clipboard.&quot;);
+    } else {
+        WDS.log.info(&quot;ID token retrieved from clipboard: &quot; + idToken);
+        org.apache.jmeter.threads.JMeterContextService.getContext().getVariables().put(&quot;idToken&quot;, idToken);
+        WDS.log.info(&quot;ID token saved to JMeter variable: idToken = &quot; + idToken);
+    }
+
+
+
+
+   
+} catch (Exception e) {
+    // Log any errors that occur during the test
+    WDS.log.error(&quot;An unexpected error occurred: &quot; + e.getMessage());
+} finally {
+    WDS.sampleResult.sampleEnd();
+    WDS.log.info(&quot;Sample ended.&quot;);
+}
+	
+
+</stringProp>
+          <stringProp name="WebDriverSampler.parameters"></stringProp>
+          <stringProp name="WebDriverSampler.language">java</stringProp>
+        </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">grant_type=authorization_code&amp;code=${auth_Code}&amp;redirect_uri=https%3A%2F%2Foauth-playdgound-nexusge-frontend-web-e0a170a22b956c8a7ff4d5ff6.gitlab.io&amp;client_id=superapp-webview-mobile-app-01&amp;code_verifier=${codeVerifier}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">kc.staging.silktech.ge</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/realms/super-app/protocol/openid-connect/token</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="TestPlan.comments">Created from cURL on 2024-11-12T22:04:54.995</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP HeaderManager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="accept" elementType="Header">
+                <stringProp name="Header.name">accept</stringProp>
+                <stringProp name="Header.value">*/*</stringProp>
+              </elementProp>
+              <elementProp name="accept-language" elementType="Header">
+                <stringProp name="Header.name">accept-language</stringProp>
+                <stringProp name="Header.value">en-GB,en-US;q=0.9,en;q=0.8,ur;q=0.7</stringProp>
+              </elementProp>
+              <elementProp name="content-type" elementType="Header">
+                <stringProp name="Header.name">content-type</stringProp>
+                <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+              </elementProp>
+              <elementProp name="dnt" elementType="Header">
+                <stringProp name="Header.name">dnt</stringProp>
+                <stringProp name="Header.value">1</stringProp>
+              </elementProp>
+              <elementProp name="origin" elementType="Header">
+                <stringProp name="Header.name">origin</stringProp>
+                <stringProp name="Header.value">https://oauth-playdgound-nexusge-frontend-web-e0a170a22b956c8a7ff4d5ff6.gitlab.io</stringProp>
+              </elementProp>
+              <elementProp name="priority" elementType="Header">
+                <stringProp name="Header.name">priority</stringProp>
+                <stringProp name="Header.value">u=1, i</stringProp>
+              </elementProp>
+              <elementProp name="referer" elementType="Header">
+                <stringProp name="Header.name">referer</stringProp>
+                <stringProp name="Header.value">https://oauth-playdgound-nexusge-frontend-web-e0a170a22b956c8a7ff4d5ff6.gitlab.io/</stringProp>
+              </elementProp>
+              <elementProp name="sec-ch-ua" elementType="Header">
+                <stringProp name="Header.name">sec-ch-ua</stringProp>
+                <stringProp name="Header.value">&quot;Chromium&quot;;v=&quot;130&quot;, &quot;Google Chrome&quot;;v=&quot;130&quot;, &quot;Not?A_Brand&quot;;v=&quot;99&quot;</stringProp>
+              </elementProp>
+              <elementProp name="sec-ch-ua-mobile" elementType="Header">
+                <stringProp name="Header.name">sec-ch-ua-mobile</stringProp>
+                <stringProp name="Header.value">?0</stringProp>
+              </elementProp>
+              <elementProp name="sec-ch-ua-platform" elementType="Header">
+                <stringProp name="Header.name">sec-ch-ua-platform</stringProp>
+                <stringProp name="Header.value">&quot;Windows&quot;</stringProp>
+              </elementProp>
+              <elementProp name="sec-fetch-dest" elementType="Header">
+                <stringProp name="Header.name">sec-fetch-dest</stringProp>
+                <stringProp name="Header.value">empty</stringProp>
+              </elementProp>
+              <elementProp name="sec-fetch-mode" elementType="Header">
+                <stringProp name="Header.name">sec-fetch-mode</stringProp>
+                <stringProp name="Header.value">cors</stringProp>
+              </elementProp>
+              <elementProp name="sec-fetch-site" elementType="Header">
+                <stringProp name="Header.name">sec-fetch-site</stringProp>
+                <stringProp name="Header.value">cross-site</stringProp>
+              </elementProp>
+              <elementProp name="user-agent" elementType="Header">
+                <stringProp name="Header.name">user-agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Created from cURL on 2024-11-12T22:04:54.995</stringProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+          <boolProp name="displayJMeterProperties">false</boolProp>
+          <boolProp name="displayJMeterVariables">true</boolProp>
+          <boolProp name="displaySystemProperties">false</boolProp>
+        </DebugSampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
